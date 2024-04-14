@@ -9,9 +9,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-@RestController
-@RequestMapping("/Img")
+@RestController@RequestMapping("/Img")
 public class ImgDetectController {
     @PostMapping("/detect")
     public ResponseEntity<byte[]> getDetectImg(@RequestParam("file") MultipartFile file) throws IOException {
@@ -41,6 +44,9 @@ public class ImgDetectController {
 
 // 处理响应
         if (response.getStatusCode().is2xxSuccessful()) {
+            //存储搜索历史到数据库
+            saveImage(response.getBody(),file.getName());
+
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.setContentType(MediaType.IMAGE_JPEG); // 假设图片是JPEG格式，根据实际情况调整
             return new ResponseEntity<>(response.getBody(), responseHeaders, HttpStatus.OK);
@@ -49,4 +55,26 @@ public class ImgDetectController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //存储图片
+    private void saveImage(byte[] imageData,String fileName){
+        try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yami_shop", "root","123456")){
+            String sql = "INSERT INTO history(file_name,image_data) VALUES(?,?)";
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setString(1,fileName);
+                statement.setBytes(2,imageData);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+/*
+* 建表语句
+* CREATE TABLE History(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	file_name VARCHAR(255) NOT NULL,
+	image_data LONGBLOB NOT NULL
+);
+*/
 }
+
