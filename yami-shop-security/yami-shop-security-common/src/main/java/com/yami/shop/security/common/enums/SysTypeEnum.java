@@ -25,6 +25,7 @@ public enum SysTypeEnum {
      * 后台
      */
     ADMIN(1),
+    SHOP(2),
     ;
 
     private final Integer value;

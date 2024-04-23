@@ -9,6 +9,7 @@
  */
 package com.yami.shop.security.common.manager;
 
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.yami.shop.common.exception.YamiShopBindException;
 import org.slf4j.Logger;
@@ -33,10 +34,12 @@ public class PasswordManager {
     public String passwordSignKey;
 
     public String decryptPassword(String data) {
+//        System.out.println(passwordSignKey);
         // 在使用oracle的JDK时，JAR包必须签署特殊的证书才能使用。
         // 解决方案 1.使用openJDK或者非oracle的JDK（建议） 2.添加证书
         // hutool的aes报错可以打开下面那段代码
-        // SecureUtil.disableBouncyCastle();
+        SecureUtil.disableBouncyCastle();
+        System.out.println(passwordSignKey.getBytes(StandardCharsets.UTF_8));
         AES aes = new AES(passwordSignKey.getBytes(StandardCharsets.UTF_8));
         String decryptStr;
         String decryptPassword;

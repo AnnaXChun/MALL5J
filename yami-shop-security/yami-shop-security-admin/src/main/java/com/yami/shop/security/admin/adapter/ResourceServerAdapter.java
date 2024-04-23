@@ -21,6 +21,7 @@ public class ResourceServerAdapter extends DefaultAuthConfigAdapter {
             "/swagger-resources/**",
             "/captcha/**",
             "/adminLogin",
+            "/shopRegister/**",
             "/mall4j/img/**");
 
     @Override
