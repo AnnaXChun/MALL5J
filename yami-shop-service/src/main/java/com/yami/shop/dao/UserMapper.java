@@ -12,11 +12,13 @@ package com.yami.shop.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yami.shop.bean.model.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @author lanhai
  */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 	/**
 	 * 根据用户邮箱获取用户信息
