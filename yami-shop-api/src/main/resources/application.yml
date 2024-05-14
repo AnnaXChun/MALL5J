@@ -11,6 +11,16 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  application:
+    name: maple-consumer
+    cloud:
+      consul:
+        # consul注册中心地址
+        host: localhost
+        port: 8500
+        discovery:
+          #hostname: 127.0.0.1
+          service-name: ${spring.application.name}
 # mybaits-plus配置
 mybatis-plus:
   # MyBatis Mapper所对应的XML文件位置

@@ -15,7 +15,8 @@ import com.yami.shop.bean.model.Message;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * @author lanhai
+ * @author chunxiang
  */
 public interface MessageMapper extends BaseMapper<Message> {
+
 }

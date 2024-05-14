@@ -1,5 +1,8 @@
 package com.yami.shop.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -9,13 +12,31 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/Img")
 public class ImgDetectController {
+
+    public static final  String PAYMENT_URL = "http://localhost:8090";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Data
+    public static class PythonResponse {
+        private String image;
+        private int id;
+        private String name;
+    }
+
+    @GetMapping("/test")
+    public String getPayment() {
+        return restTemplate.getForObject(PAYMENT_URL + "/test", String.class);
+    }
+
     @PostMapping("/detect")
-    public ResponseEntity<byte[]> getDetectImg(@RequestParam("file") MultipartFile file) throws IOException {
-        //  准备文件资源
+    public ResponseEntity<PythonResponse> getDetectImg(@RequestParam("file") MultipartFile file) throws IOException {
         ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
             @Override
             public String getFilename() {
@@ -23,27 +44,22 @@ public class ImgDetectController {
             }
         };
 
-// 构造请求体
+
         MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("file", fileResource);
-
-//  设置请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-//创建 HttpEntity 对象
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
-// 发送 HTTP 请求
-        RestTemplate restTemplate = new RestTemplate();
-        String pythonServiceUrl = "http://localhost:8888/api/img";
-        ResponseEntity<byte[]> response = restTemplate.postForEntity(pythonServiceUrl, requestEntity,byte[].class);
-
-// 处理响应
+        String pythonServiceUrl = PAYMENT_URL+"/api/img";
+        ResponseEntity<PythonResponse> response = restTemplate.postForEntity(pythonServiceUrl, requestEntity,PythonResponse.class);
+        System.out.println(response);
         if (response.getStatusCode().is2xxSuccessful()) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.setContentType(MediaType.IMAGE_JPEG); // 假设图片是JPEG格式，根据实际情况调整
-            return new ResponseEntity<>(response.getBody(), responseHeaders, HttpStatus.OK);
+//            HttpHeaders responseHeaders = new HttpHeaders();
+//            responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+//            return new ResponseEntity<>(response.getBody(), responseHeaders, HttpStatus.OK);
+            return response;
         } else {
             System.out.println("Failed to call Python API");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
