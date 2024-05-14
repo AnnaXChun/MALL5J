@@ -67,13 +67,13 @@ public class ProductParam {
     @Size(max = 500, message = "商品卖点长度应该小于{max}")
     private String brief;
 
-    @NotBlank(message = "请选择图片上传")
+//    @NotBlank(message = "请选择图片上传")
     private String pic;
 
     /**
      * 商品图片
      */
-    @NotBlank(message = "请选择图片上传")
+//    @NotBlank(message = "请选择图片上传")
     private String imgs;
 
     /**

@@ -1,6 +1,5 @@
 package com.yami.shop.api.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -12,7 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/Img")
@@ -56,13 +58,33 @@ public class ImgDetectController {
         ResponseEntity<PythonResponse> response = restTemplate.postForEntity(pythonServiceUrl, requestEntity,PythonResponse.class);
         System.out.println(response);
         if (response.getStatusCode().is2xxSuccessful()) {
-//            HttpHeaders responseHeaders = new HttpHeaders();
-//            responseHeaders.setContentType(MediaType.IMAGE_JPEG);
-//            return new ResponseEntity<>(response.getBody(), responseHeaders, HttpStatus.OK);
+
+            saveImage(response.getBody().getImage().getBytes(),file.getName());
             return response;
         } else {
             System.out.println("Failed to call Python API");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    //存储图片
+    private void saveImage(byte[] imageData,String fileName){
+        try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yami_shop", "root","123456")){
+            String sql = "INSERT INTO history(file_name,image_data) VALUES(?,?)";
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setString(1,fileName);
+                statement.setBytes(2,imageData);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+/*
+* 建表语句
+* CREATE TABLE History(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	file_name VARCHAR(255) NOT NULL,
+	image_data LONGBLOB NOT NULL
+);
+*/
 }

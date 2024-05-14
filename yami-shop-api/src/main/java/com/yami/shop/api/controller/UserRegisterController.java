@@ -48,11 +48,15 @@ public class UserRegisterController {
         if (StrUtil.isBlank(userRegisterParam.getNickName())) {
             userRegisterParam.setNickName(userRegisterParam.getUserName());
         }
+        System.out.println(
+                userRegisterParam
+        );
         // 正在进行申请注册
         if (userService.count(new LambdaQueryWrapper<User>().eq(User::getNickName, userRegisterParam.getNickName())) > 0) {
             // 该用户名已注册，无法重新注册
             throw new YamiShopBindException("该用户名已注册，无法重新注册");
         }
+
         Date now = new Date();
         User user = new User();
         user.setModifyTime(now);
