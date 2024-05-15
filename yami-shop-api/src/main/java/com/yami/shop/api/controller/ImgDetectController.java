@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/Img")
@@ -28,8 +29,10 @@ public class ImgDetectController {
     @Data
     public static class PythonResponse {
         private String image;
-        private int id;
+        private String user_id;
+        private String img_id;
         private String name;
+        private String time;
     }
 
     @GetMapping("/test")
@@ -59,20 +62,26 @@ public class ImgDetectController {
         System.out.println(response);
         if (response.getStatusCode().is2xxSuccessful()) {
 
-            saveImage(response.getBody().getImage().getBytes(),file.getName());
+            saveImage( Objects.requireNonNull(response.getBody()).getUser_id(),response.getBody().getImg_id(),response.getBody().getImage().getBytes(),file.getName(), response.getBody().getTime());
             return response;
         } else {
             System.out.println("Failed to call Python API");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
     //存储图片
-    private void saveImage(byte[] imageData,String fileName){
+    private void saveImage(String userId, String imgId,byte[] imageData,String fileName, String time){
         try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yami_shop", "root","123456")){
-            String sql = "INSERT INTO history(file_name,image_data) VALUES(?,?)";
+            String sql = "INSERT INTO history(user_id,img_id,file_name,image_data,time) VALUES(?,?,?,?,?)";
             try(PreparedStatement statement = connection.prepareStatement(sql)){
-                statement.setString(1,fileName);
-                statement.setBytes(2,imageData);
+                statement.setString(1,userId);
+                statement.setString(2,imgId);
+                statement.setString(3,fileName);
+                statement.setBytes(4,imageData);
+                statement.setString(5,time);
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -83,8 +92,11 @@ public class ImgDetectController {
 * 建表语句
 * CREATE TABLE History(
 	id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id VARCHAR(255) NOT NULL,
+	img_id VARCHAR(255) NOT NULL,
 	file_name VARCHAR(255) NOT NULL,
-	image_data LONGBLOB NOT NULL
+	image_data LONGBLOB NOT NULL,
+	time datetime
 );
 */
 }
