@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/Img")
@@ -28,7 +29,7 @@ public class ImgDetectController {
     @Data
     public static class PythonResponse {
         private String image;
-        private int id;
+        private String id;
         private String name;
     }
 
@@ -59,7 +60,7 @@ public class ImgDetectController {
         System.out.println(response);
         if (response.getStatusCode().is2xxSuccessful()) {
 
-            saveImage(response.getBody().getImage().getBytes(),file.getName());
+            saveImage( Objects.requireNonNull(response.getBody()).getId(),response.getBody().getImage().getBytes(),file.getName());
             return response;
         } else {
             System.out.println("Failed to call Python API");
@@ -67,12 +68,13 @@ public class ImgDetectController {
         }
     }
     //存储图片
-    private void saveImage(byte[] imageData,String fileName){
+    private void saveImage(String userId, byte[] imageData,String fileName){
         try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yami_shop", "root","123456")){
-            String sql = "INSERT INTO history(file_name,image_data) VALUES(?,?)";
+            String sql = "INSERT INTO history(user_id,file_name,image_data) VALUES(?,?,?)";
             try(PreparedStatement statement = connection.prepareStatement(sql)){
-                statement.setString(1,fileName);
-                statement.setBytes(2,imageData);
+                statement.setString(1,userId);
+                statement.setString(2,fileName);
+                statement.setBytes(3,imageData);
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -83,6 +85,7 @@ public class ImgDetectController {
 * 建表语句
 * CREATE TABLE History(
 	id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id VARCHAR(255) NOT NULL,
 	file_name VARCHAR(255) NOT NULL,
 	image_data LONGBLOB NOT NULL
 );
