@@ -59,6 +59,7 @@ public class LoginController {
         userInfoInToken.setEnabled(user.getStatus() == 1);
         // 存储token返回vo
         TokenInfoVO tokenInfoVO = tokenStore.storeAndGetVo(userInfoInToken);
+        tokenInfoVO.setUserId(userInfoInToken.getUserId());
         return ServerResponseEntity.success(tokenInfoVO);
     }
 

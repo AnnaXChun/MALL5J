@@ -2,4 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yami.shop.dao.WsMessageMapper">
 
+    <insert id="saveMsg" parameterType="com.yami.shop.bean.param.MessageParam">
+        Insert into tz_ws_message (Shopid, userId, message, Time, Username, Shopname, Email, `from`)
+        values (#{Shopid}, #{userId}, #{Message}, #{Time}, #{Username}, #{Shopname}, #{Email}, #{From})
+    </insert>
+
+    <select id="GetByUserId" resultType="java.lang.String">
+        SELECT DISTINCT Shopid
+        FROM tz_ws_message
+        WHERE userId = #{userId};
+    </select>
+
+    <select id="GetByUserIdAndShopId" resultType="com.yami.shop.bean.param.MessageParam">
+        SELECT * from tz_ws_message
+        WHERE userId = #{userId} and Shopid = #{shopId}
+        order by Time
+    </select>
 </mapper>
