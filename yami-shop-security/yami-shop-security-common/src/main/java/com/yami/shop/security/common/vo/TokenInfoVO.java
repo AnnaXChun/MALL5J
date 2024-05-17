@@ -29,4 +29,6 @@ public class TokenInfoVO {
 
     @Schema(description = "在多少秒后过期" )
     private Integer expiresIn;
+    @Schema(description = "在多少秒后过期" )
+    private String userId;
 }
