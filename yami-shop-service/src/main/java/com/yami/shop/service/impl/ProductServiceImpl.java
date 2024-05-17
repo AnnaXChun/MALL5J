@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.app.dto.ProductDto;
 import com.yami.shop.bean.app.dto.TagProductDto;
 import com.yami.shop.bean.dto.SearchProdDto;
+import com.yami.shop.bean.model.Image;
 import com.yami.shop.bean.model.ProdTagReference;
 import com.yami.shop.bean.model.Product;
 import com.yami.shop.bean.model.Sku;
@@ -198,6 +199,4 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public IPage<ProductDto> collectionProds(PageParam page, String userId) {
         return productMapper.collectionProds(page, userId);
     }
-
-
 }

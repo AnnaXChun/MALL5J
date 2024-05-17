@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.ImgMapper">
+
+    <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.Image">
+       <result property="user_id" column="user_id"/>
+       <result property="image_id" column="image_id"/>
+       <result property="file_name" column="file_name"/>
+       <result property="image_data" column="image_data"/>
+       <result property="search_time" column="search_time"/>
+    </resultMap>
+
+
+
+
+    <select id="selectAll" resultType="com.yami.shop.bean.dto.ImageDto">
+        select search_time, image_data, file_name, image_id from history where user_id = #{userId}
+    </select>
+
+
+
+</mapper>
