@@ -3,9 +3,11 @@ package com.yami.shop.api.controller;
 import com.yami.shop.bean.dto.ImageDto;
 import com.yami.shop.bean.model.Image;
 import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.service.ImgService;
 import com.yami.shop.service.ProductService;
 import com.yami.shop.service.impl.ImgServiceImpl;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -42,7 +44,7 @@ public class ImgDetectController {
     }
 
     @PostMapping("/detect")
-    public ResponseEntity<Image> getDetectImg(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Image> getDetectImg(@RequestParam("file") MultipartFile file, @RequestParam String user_id) throws IOException {
         ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
             @Override
             public String getFilename() {
@@ -60,6 +62,7 @@ public class ImgDetectController {
 
         String pythonServiceUrl = PAYMENT_URL+"/api/img";
         ResponseEntity<Image> response = restTemplate.postForEntity(pythonServiceUrl, requestEntity,Image.class);
+        Objects.requireNonNull(response.getBody()).setUser_id(user_id);
         System.out.println(response);
         if (response.getStatusCode().is2xxSuccessful()) {
             imgService.saveImage(response.getBody());
