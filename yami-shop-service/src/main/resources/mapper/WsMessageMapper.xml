@@ -3,8 +3,8 @@
 <mapper namespace="com.yami.shop.dao.WsMessageMapper">
 
     <insert id="saveMsg" parameterType="com.yami.shop.bean.param.MessageParam">
-        Insert into tz_ws_message (Shopid, userId, message, Time, Username, Shopname, Email, `from`)
-        values (#{Shopid}, #{userId}, #{Message}, #{Time}, #{Username}, #{Shopname}, #{Email}, #{From})
+        Insert into tz_ws_message (Shopid, userId, message, Time, `from`)
+        values (#{Shopid}, #{userId}, #{Message}, #{Time}, #{From})
     </insert>
 
     <select id="GetByUserId" resultType="java.lang.String">
