@@ -118,4 +118,6 @@ public interface OrderService extends IService<Order> {
      * @return
      */
     OrderCountData getOrderCount(String userId);
+
+    List<Double> getSales(Long id);
 }

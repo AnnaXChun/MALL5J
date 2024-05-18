@@ -168,5 +168,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return orderMapper.getOrderCount(userId);
     }
 
+    @Override
+    public List<Double> getSales(Long id){
+        List<Double> list = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            list.add(orderItemMapper.getSales(id, i*30));
+        }
+        return list;
+    }
 
 }
