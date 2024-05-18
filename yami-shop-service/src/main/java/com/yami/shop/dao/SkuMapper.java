@@ -12,11 +12,13 @@ package com.yami.shop.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yami.shop.bean.model.Sku;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
+@Mapper
 /**
  * @author lanhai
  */

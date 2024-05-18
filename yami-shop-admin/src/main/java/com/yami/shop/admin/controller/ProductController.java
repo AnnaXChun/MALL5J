@@ -232,4 +232,6 @@ public class ProductController {
             throw new YamiShopBindException("至少要启用一种商品规格");
         }
     }
+
+
 }

@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yami.shop.bean.app.dto.ProductDto;
 import com.yami.shop.bean.app.dto.TagProductDto;
 import com.yami.shop.bean.dto.SearchProdDto;
+import com.yami.shop.bean.model.Image;
 import com.yami.shop.bean.model.Product;
 import com.yami.shop.common.util.PageParam;
 

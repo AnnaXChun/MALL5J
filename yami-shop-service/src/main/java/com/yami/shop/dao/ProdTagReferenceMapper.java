@@ -13,6 +13,7 @@ package com.yami.shop.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yami.shop.bean.model.ProdTagReference;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author hzm
  * @date 2019-04-18 16:28:01
  */
+@Mapper
 public interface ProdTagReferenceMapper extends BaseMapper<ProdTagReference> {
     /**
      * 插入标签
