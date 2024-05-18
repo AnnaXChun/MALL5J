@@ -13,10 +13,8 @@
 
 
 
-    <select id="selectAll" resultType="com.yami.shop.bean.dto.ImageDto">
-        select search_time, image_data, file_name, image_id from history where user_id = #{userId}
+    <select id="selectAll" resultType="com.yami.shop.bean.model.Image">
+        select * from history where userId = #{userId}
     </select>
-
-
 
 </mapper>

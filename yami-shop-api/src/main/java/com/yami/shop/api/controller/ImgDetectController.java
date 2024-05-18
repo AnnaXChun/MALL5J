@@ -3,6 +3,7 @@ package com.yami.shop.api.controller;
 import com.yami.shop.bean.dto.ImageDto;
 import com.yami.shop.bean.model.Image;
 import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.dao.ImgMapper;
 import com.yami.shop.service.ImgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,6 +30,8 @@ public class ImgDetectController {
 
     @Autowired
     private ImgService imgService;
+    @Autowired
+    private ImgMapper imageMapper;
 
 
     @PostMapping("/detect/{userid}")
@@ -51,8 +54,8 @@ public class ImgDetectController {
         Image image = response.getBody();
         LocalDateTime now = LocalDateTime.now();
         if (image != null) {
-            image.setUser_id(userid);
-            image.setSearch_time(now);
+            image.setUserId(userid);
+            image.setTime(now);
         }
         if (response.getStatusCode().is2xxSuccessful()) {
             imgService.saveImage(response.getBody());
@@ -64,10 +67,12 @@ public class ImgDetectController {
     }
 
     @PostMapping("/history")
-    public ServerResponseEntity<List<ImageDto>> getHistory(@RequestParam String userId){
+    public ServerResponseEntity<List<Image>> getHistory(@RequestParam String userId){
         System.out.println(userId);
-        List<ImageDto>imageDtoList = imgService.getHistory(userId);
-        return ServerResponseEntity.success(imageDtoList);
+        System.out.println(imageMapper.selectList(null));
+        List<Image>imageList = imgService.getHistory(userId);
+        System.out.println(imageList);
+        return ServerResponseEntity.success(imageList);
     }
 
 

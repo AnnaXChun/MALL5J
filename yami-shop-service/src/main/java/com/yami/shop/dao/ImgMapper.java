@@ -11,6 +11,6 @@ import java.util.List;
 public interface ImgMapper extends BaseMapper<Image> {
 
     //返回所有搜索历史
-    List<ImageDto> selectAll(String userId);
+    List<Image> selectAll(String userId);
 
 }

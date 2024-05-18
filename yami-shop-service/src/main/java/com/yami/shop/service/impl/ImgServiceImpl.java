@@ -17,7 +17,6 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Image> implements Img
     @Autowired
     private ImgMapper imageMapper;
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void saveImage(Image img){
         imageMapper.insert(img);
     }
@@ -33,10 +32,8 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Image> implements Img
     }
 
     @Override
-    public List<ImageDto> getHistory(String userId){
+    public List<Image> getHistory(String userId){
         return imageMapper.selectAll(userId);
     }
-
-
 
 }

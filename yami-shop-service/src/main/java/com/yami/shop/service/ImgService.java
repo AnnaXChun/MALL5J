@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ImgService extends IService<Image> {
 
     //存储图片到历史记录
@@ -22,6 +21,6 @@ public interface ImgService extends IService<Image> {
     void removeImgById(String imgId);
 
     //分页获取商品搜索历史
-    List<ImageDto> getHistory(String userId);
+    List<Image> getHistory(String userId);
 
 }
