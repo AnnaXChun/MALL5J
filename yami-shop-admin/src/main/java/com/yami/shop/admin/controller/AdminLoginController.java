@@ -104,6 +104,7 @@ public class AdminLoginController {
         userInfoInToken.setShopId(sysUser.getShopId());
         // 存储token返回vo
         TokenInfoVO tokenInfoVO = tokenStore.storeAndGetVo(userInfoInToken);
+        tokenInfoVO.setUserId(String.valueOf(sysUser.getUserId()));
         return ServerResponseEntity.success(tokenInfoVO);
     }
 
