@@ -1,12 +1,13 @@
 package com.yami.shop.api.controller;
 
+
+import com.yami.shop.bean.model.SysUser;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.MessageParam;
 import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.dao.ShopUserMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.dao.WsMessageMapper;
-import com.yami.shop.sys.dao.SysUserMapper;
-import com.yami.shop.sys.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class MSGController {
     @Autowired
     private WsMessageMapper wsMessageMapper;
     @Autowired
-    private SysUserMapper sysUserMapper;
+    private ShopUserMapper sysUserMapper;
     @Autowired
     private UserMapper userMapper;
 
@@ -37,7 +38,7 @@ public class MSGController {
     }
 //    根据用户id获取对话过的商家
     @GetMapping("/GetShopList")
-    public ServerResponseEntity<List<SysUser>> GetShopList(@RequestBody MessageParam msgParamArray) {
+    public ServerResponseEntity<List<SysUser>> GetShopList() {
         List<SysUser> shopidlist =  sysUserMapper.selectList(null);
         return ServerResponseEntity.success(shopidlist);
     }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.time.LocalTime;
 
 @Data
 @TableName("tz_ws_message")
@@ -33,22 +32,9 @@ public class MessageParam {
     @TableField("userId")
     private String userId;
 
-    @NotBlank(message = "商户名称不能为空")
-    @JsonProperty("Shopname")
-    private String  Shopname;
-
     @NotBlank(message = "商户ID不能为空")
     @JsonProperty("Shopid")
     @TableField("Shopid")
     private Long Shopid;
 
-    @NotBlank(message = "用户名不能为空")
-    @JsonProperty("Username")
-    @TableField("Username")
-    private String Username;
-
-//    @NotBlank(message = "邮箱不能为空")
-    @JsonProperty("Email")
-    @TableField("Email")
-    private String Email;
 }

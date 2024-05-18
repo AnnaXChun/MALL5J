@@ -3,12 +3,7 @@ package com.yami.shop.api.controller;
 import com.yami.shop.bean.dto.ImageDto;
 import com.yami.shop.bean.model.Image;
 import com.yami.shop.common.response.ServerResponseEntity;
-import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.service.ImgService;
-import com.yami.shop.service.ProductService;
-import com.yami.shop.service.impl.ImgServiceImpl;
-import io.swagger.v3.oas.annotations.Parameter;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -19,12 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/Img")
@@ -38,21 +30,15 @@ public class ImgDetectController {
     @Autowired
     private ImgService imgService;
 
-    @GetMapping("/test")
-    public String getPayment() {
-        return restTemplate.getForObject(PAYMENT_URL + "/test", String.class);
-    }
 
-    @PostMapping("/detect")
-    public ResponseEntity<Image> getDetectImg(@RequestParam("file") MultipartFile file, @RequestParam String user_id) throws IOException {
+    @PostMapping("/detect/{userid}")
+    public ResponseEntity<Image> getDetectImg(@RequestParam("file") MultipartFile file, @PathVariable String userid) throws IOException {
         ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
             @Override
             public String getFilename() {
                 return file.getOriginalFilename();
             }
         };
-
-
         MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("file", fileResource);
         HttpHeaders headers = new HttpHeaders();
@@ -62,11 +48,15 @@ public class ImgDetectController {
 
         String pythonServiceUrl = PAYMENT_URL+"/api/img";
         ResponseEntity<Image> response = restTemplate.postForEntity(pythonServiceUrl, requestEntity,Image.class);
-        Objects.requireNonNull(response.getBody()).setUser_id(user_id);
-        System.out.println(response);
+        Image image = response.getBody();
+        LocalDateTime now = LocalDateTime.now();
+        if (image != null) {
+            image.setUser_id(userid);
+            image.setSearch_time(now);
+        }
         if (response.getStatusCode().is2xxSuccessful()) {
             imgService.saveImage(response.getBody());
-            return response;
+            return new ResponseEntity<>(image, HttpStatus.OK);
         } else {
             System.out.println("Failed to call Python API");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,6 +65,7 @@ public class ImgDetectController {
 
     @PostMapping("/history")
     public ServerResponseEntity<List<ImageDto>> getHistory(@RequestParam String userId){
+        System.out.println(userId);
         List<ImageDto>imageDtoList = imgService.getHistory(userId);
         return ServerResponseEntity.success(imageDtoList);
     }
