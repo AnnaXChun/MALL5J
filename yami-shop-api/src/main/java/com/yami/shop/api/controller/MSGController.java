@@ -1,9 +1,12 @@
 package com.yami.shop.api.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.MessageParam;
 import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.dao.UserMapper;
 import com.yami.shop.dao.WsMessageMapper;
+import com.yami.shop.sys.dao.SysUserMapper;
+import com.yami.shop.sys.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,11 @@ import java.util.List;
 public class MSGController {
     @Autowired
     private WsMessageMapper wsMessageMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
+    @Autowired
+    private UserMapper userMapper;
+
     @PostMapping("/save")
     //保存聊天记录
     public ServerResponseEntity<String> saveMsg(@RequestBody MessageParam[] msgParamArray) {
@@ -28,8 +36,14 @@ public class MSGController {
         return ServerResponseEntity.success(wsMessageMapper.GetByUserIdAndShopId(param.getUserId(),param.getShopid()));
     }
 //    根据用户id获取对话过的商家
-    @PostMapping("/GetShopList")
-    public ServerResponseEntity<List<String>> GetShopList(@RequestBody MessageParam msgParamArray) {
-        return ServerResponseEntity.success(wsMessageMapper.GetByUserId(msgParamArray.getUserId()));
+    @GetMapping("/GetShopList")
+    public ServerResponseEntity<List<SysUser>> GetShopList(@RequestBody MessageParam msgParamArray) {
+        List<SysUser> shopidlist =  sysUserMapper.selectList(null);
+        return ServerResponseEntity.success(shopidlist);
+    }
+    @GetMapping("/GetUserList")
+    public ServerResponseEntity<List<User>> GetUserList() {
+        List<User> Useridlist =  userMapper.selectList(null);
+        return ServerResponseEntity.success(Useridlist);
     }
 }
