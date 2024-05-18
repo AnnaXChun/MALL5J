@@ -13,6 +13,7 @@ package com.yami.shop.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yami.shop.bean.model.OrderItem;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -34,4 +35,14 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
 	 */
 	void insertBatch(List<OrderItem> orderItems);
 
+	@Select("<script>" +
+			"SELECT " +
+			"SUM(CASE " +
+			"WHEN DATEDIFF(NOW(), rec_time) BETWEEN #{day} AND #{day}+30 THEN prod_count " +
+			"ELSE 0 END) AS 'Month1' " +
+			"FROM tz_order_item " +
+			"WHERE shop_id = #{shopId} " +
+			"GROUP BY shop_id" +
+			"</script>")
+	Double getSales(Long shopId, int day);
 }
