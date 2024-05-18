@@ -3,12 +3,7 @@ package com.yami.shop.api.controller;
 import com.yami.shop.bean.dto.ImageDto;
 import com.yami.shop.bean.model.Image;
 import com.yami.shop.common.response.ServerResponseEntity;
-import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.service.ImgService;
-import com.yami.shop.service.ProductService;
-import com.yami.shop.service.impl.ImgServiceImpl;
-import io.swagger.v3.oas.annotations.Parameter;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -19,14 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/Img")

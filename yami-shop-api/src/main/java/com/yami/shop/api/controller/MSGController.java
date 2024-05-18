@@ -5,7 +5,7 @@ import com.yami.shop.bean.model.SysUser;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.MessageParam;
 import com.yami.shop.common.response.ServerResponseEntity;
-import com.yami.shop.dao.SysUserMapper;
+import com.yami.shop.dao.ShopUserMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.dao.WsMessageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class MSGController {
     @Autowired
     private WsMessageMapper wsMessageMapper;
     @Autowired
-    private SysUserMapper sysUserMapper;
+    private ShopUserMapper sysUserMapper;
     @Autowired
     private UserMapper userMapper;
 
